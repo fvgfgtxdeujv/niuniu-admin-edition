@@ -654,9 +654,7 @@ class NiuniuPlugin(Star):
                                                                     }
                                                                     self.update_user_data(group_id, user_id, updated_user)
                                                                     total_gain += extra_loot
-                                                                    text += f"\n🔥 淬火爪刀触发！额外掠夺 {
-                                                                    extra_loot
-                                                                    }cm！"
+                                                                    text += f"\n🔥 淬火爪刀触发！额外掠夺 {extra_loot}cm！"
                                                                     self.shop.consume_item(group_id, user_id, "淬火爪刀")
                                                                     if abs(u_len - t_len) >= 20 and user_data['hardness'] < target_data['hardness']:
                                                                         extra_gain = random.randint(0, 5)
@@ -665,9 +663,7 @@ class NiuniuPlugin(Star):
                                                                         }
                                                                         self.update_user_data(group_id, user_id, updated_user)
                                                                         total_gain += extra_gain
-                                                                        text += f"\n🎁 由于极大劣势获胜，额外增加 {
-                                                                        extra_gain
-                                                                        }cm！"
+                                                                        text += f"\n🎁 由于极大劣势获胜，额外增加 {extra_gain}cm！"
                                                                         if abs(u_len - t_len) > 10 and u_len < t_len:
                                                                             stolen_length = int(target_data['length'] * 0.2)
                                                                             updated_user = {
@@ -679,18 +675,11 @@ class NiuniuPlugin(Star):
                                                                             self.update_user_data(group_id, user_id, updated_user)
                                                                             self.update_user_data(group_id, target_id, updated_target)
                                                                             total_gain += stolen_length
-                                                                            text += f"\n🎉 {
-                                                                            nickname
-                                                                            } 掠夺了 {
-                                                                            stolen_length
-                                                                            }cm！"
+                                                                            text += f"\n🎉 {nickname} 掠夺了 {stolen_length}cm！"
                                                                             if abs(u_len - t_len) <= 5 and user_data['hardness'] > target_data['hardness']:
-                                                                                text += f"\n🎉 {
-                                                                                nickname
-                                                                                } 因硬度优势获胜！"
+                                                                                text += f"\n🎉 {nickname} 因硬度优势获胜！"
                                                                                 if total_gain == 0:
-                                                                                    text += f"\n {
-                                                                                    self.niuniu_texts['compare']['user_no_increase'].format(nickname = nickname)}"
+                                                                                    text += f"\n {self.niuniu_texts['compare']['user_no_increase'].format(nickname = nickname)}"
                                                                                     else :
                                                                                         gain = random.randint(0, 3)
                                                                                         loss = random.randint(1, 2)
@@ -1049,16 +1038,9 @@ class NiuniuPlugin(Star):
                 if not items_str:
                     items_str = "  无道具"
                     user_info = f"""👑 用户详细信息：
-                    👤 昵称： {
-                    target_data['nickname']}
-                    📏 长度： {
-                    self.format_length(target_data['length'])}
-                    💪 硬度： {
-                    target_data['hardness']}
-                    💰 金币： {
-                    target_data.get('gold', 0)}
-                    📦 道具：
-                    {
-                    items_str
-                    }"""
+                    👤 昵称：{target_data['nickname']}
+                    📏 长度：{self.format_length(target_data['length'])}
+                    💪 硬度：{target_data['hardness']}
+                    💰 金币：{target_data.get('gold', 0)}
+                    📦 道具：{items_str}"""
                     yield event.plain_result(user_info)
