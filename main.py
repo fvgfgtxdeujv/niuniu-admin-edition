@@ -504,10 +504,7 @@ class NiuniuPlugin(Star):
                                                                 final_text = text
                                                                 # 重新获取最新数据以显示
                                                                 user_data = self.get_user_data(group_id, user_id)
-                                                                yield event.plain_result(f" {
-                                                                final_text
-                                                                }\n当前长度： {
-                                                                self.format_length(user_data['length'])}")
+                                                                yield event.plain_result(f" {final_text}\n当前长度： {self.format_length(user_data['length'])}")
     async def _compare(self, event):
         """比划功能"""
         group_id = str(event.message_obj.group_id)
