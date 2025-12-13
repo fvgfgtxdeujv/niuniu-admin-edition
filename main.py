@@ -580,33 +580,12 @@ class NiuniuPlugin(Star):
                                                     }
                                                     self.update_user_data(group_id, user_id, updated_user)
                                                     self.update_user_data(group_id, target_id, updated_target)
-                                                    result_msg = [
-                                                    "⚔️ 【牛牛对决结果】 ⚔️", f"🎉 {
-                                                    nickname
-                                                    } 获得了夺心魔技能，夺取了 {
-                                                    target_data['nickname']} 的全部长度！", f"🗡️ {
-                                                    nickname
-                                                    }: {
-                                                    self.format_length(user_data['length'] - original_target_length)} → {
-                                                    self.format_length(user_data['length'] + original_target_length)}", f"🛡️ {
-                                                    target_data['nickname']}: {
-                                                    self.format_length(original_target_length)} → 1cm"
-                                                    ]
+                                                    result_msg = ["⚔️ 【牛牛对决结果】 ⚔️", f"🎉 {nickname} 获得了夺心魔技能，夺取了 {target_data['nickname']} 的全部长度！", f"🗡️ {nickname}: {self.format_length(user_data['length'] - original_target_length)} → {self.format_length(user_data['length'] + original_target_length)}", f"🛡️ {target_data['nickname']}: {self.format_length(original_target_length)} → 1cm"]
                                                     self.shop.consume_item(group_id, user_id, "夺心魔蝌蚪罐头")
                                                     yield event.plain_result("\n".join(result_msg))
                                                     return
                                                 else : # 50%的概率无效
-                                                    result_msg = [
-                                                    "⚔️ 【牛牛对决结果】 ⚔️", f"⚠️ {
-                                                    nickname
-                                                    } 使用夺心魔蝌蚪罐头，但是罐头好像坏掉了...", f"🗡️ {
-                                                    nickname
-                                                    }: {
-                                                    self.format_length(user_data['length'])}", f"🛡️ {
-                                                    target_data['nickname']}: {
-                                                    self.format_length(target_data['length'])}"
-                                                    ]
-                                                    self.shop.consume_item(group_id, user_id, "夺心魔蝌蚪罐头")
+                                                    result_msg = ["⚔️ 【牛牛对决结果】 ⚔️", f"⚠️ {nickname} 使用夺心魔蝌蚪罐头，但是罐头好像坏掉了...", f"🗡️ {nickname}: {self.format_length(user_data['length'])}", f"🛡️ {target_data['nickname']}: {self.format_length(target_data['length'])}"]self.shop.consume_item(group_id, user_id, "夺心魔蝌蚪罐头")
                                                     yield event.plain_result("\n".join(result_msg))
                                                     return
                                                     else :
@@ -621,19 +600,7 @@ class NiuniuPlugin(Star):
                                                             }
                                                             self.update_user_data(group_id, user_id, updated_user)
                                                             self.update_user_data(group_id, target_id, updated_target)
-                                                            result_msg = [
-                                                            "⚔️ 【牛牛对决结果】 ⚔️", f"🎉 {
-                                                            nickname
-                                                            } 获得了夺心魔技能，夺取了 {
-                                                            target_data['nickname']} 的全部长度！", f"🗡️ {
-                                                            nickname
-                                                            }: {
-                                                            self.format_length(user_data['length'] - original_target_length)} → {
-                                                            self.format_length(user_data['length'] + original_target_length)}", f"🛡️ {
-                                                            target_data['nickname']}: {
-                                                            self.format_length(original_target_length)} → 1cm"
-                                                            ]
-                                                            self.shop.consume_item(group_id, user_id, "夺心魔蝌蚪罐头")
+                                                            result_msg = ["⚔️ 【牛牛对决结果】 ⚔️", f"🎉 {nickname} 获得了夺心魔技能，夺取了 {target_data['nickname']} 的全部长度！", f"🗡️ {nickname}: {self.format_length(user_data['length'] - original_target_length)} → {self.format_length(user_data['length'] + original_target_length)}", f"🛡️ {       target_data['nickname']}: {self.format_length(original_target_length)} → 1cm"]self.shop.consume_item(group_id, user_id, "夺心魔蝌蚪罐头")
                                                             yield event.plain_result("\n".join(result_msg))
                                                             return
                                                         elif effect_chance < 0.6: # 10%的概率清空自己的长度
@@ -641,31 +608,11 @@ class NiuniuPlugin(Star):
                                                             'length': 1
                                                             }
                                                             self.update_user_data(group_id, user_id, updated_user)
-                                                            result_msg = [
-                                                            "⚔️ 【牛牛对决结果】 ⚔️", f"💔 {
-                                                            nickname
-                                                            } 使用夺心魔蝌蚪罐头，牛牛变成了夺心魔！！！", f"🗡️ {
-                                                            nickname
-                                                            }: {
-                                                            self.format_length(user_data['length'])} → 1cm", f"🛡️ {
-                                                            target_data['nickname']}: {
-                                                            self.format_length(target_data['length'])}"
-                                                            ]
-                                                            self.shop.consume_item(group_id, user_id, "夺心魔蝌蚪罐头")
+                                                            result_msg = ["⚔️ 【牛牛对决结果】 ⚔️", f"💔 {nickname} 使用夺心魔蝌蚪罐头，牛牛变成了夺心魔！！！", f"🗡️ {nickname}: {self.format_length(user_data['length'])} → 1cm", f"🛡️ {target_data['nickname']}: {self.format_length(target_data['length'])}"]self.shop.consume_item(group_id, user_id, "夺心魔蝌蚪罐头")
                                                             yield event.plain_result("\n".join(result_msg))
                                                             return
                                                         else : # 40%的概率无效
-                                                            result_msg = [
-                                                            "⚔️ 【牛牛对决结果】 ⚔️", f"⚠️ {
-                                                            nickname
-                                                            } 使用夺心魔蝌蚪罐头，但是罐头好像坏掉了...", f"🗡️ {
-                                                            nickname
-                                                            }: {
-                                                            self.format_length(user_data['length'])}", f"🛡️ {
-                                                            target_data['nickname']}: {
-                                                            self.format_length(target_data['length'])}"
-                                                            ]
-                                                            self.shop.consume_item(group_id, user_id, "夺心魔蝌蚪罐头")
+                                                            result_msg = ["⚔️ 【牛牛对决结果】 ⚔️", f"⚠️ {nickname} 使用夺心魔蝌蚪罐头，但是罐头好像坏掉了...", f"🗡️ {nickname}: {self.format_length(user_data['length'])}", f"🛡️ {target_data['nickname']}: {self.format_length(target_data['length'])}"]self.shop.consume_item(group_id, user_id, "夺心魔蝌蚪罐头")
                                                             yield event.plain_result("\n".join(result_msg))
                                                             return
                                                             # 计算胜负
@@ -754,14 +701,10 @@ class NiuniuPlugin(Star):
                                                                                         is_admin_user = self.is_admin(user_id)
                                                                                         if is_admin_user:
                                                                                             # 管理员输掉时不减少长度
-                                                                                            result_msg = [f"🛡️ 【管理员特权】 {
-                                                                                            nickname
-                                                                                            } 未减少长度！"]
+                                                                                            result_msg = [f"🛡️ 【管理员特权】 {nickname} 未减少长度！"]
                                                                                             self.update_user_data(group_id, target_id, updated_target)
                                                                                             elif self.shop.consume_item(group_id, user_id, "余震"):
-                                                                                                result_msg = [f"🛡️ 【余震生效】 {
-                                                                                                nickname
-                                                                                                } 未减少长度！"]
+                                                                                                result_msg = [f"🛡️ 【余震生效】 {nickname} 未减少长度！"]
                                                                                                 self.update_user_data(group_id, target_id, updated_target)
                                                                                                 else :
                                                                                                     updated_user = {
@@ -772,11 +715,7 @@ class NiuniuPlugin(Star):
                                                                                                     }
                                                                                                     self.update_user_data(group_id, user_id, updated_user)
                                                                                                     self.update_user_data(group_id, target_id, updated_target)
-                                                                                                    result_msg = [f"💔 {
-                                                                                                    nickname
-                                                                                                    } 减少 {
-                                                                                                    loss
-                                                                                                    }cm"]
+                                                                                                    result_msg = [f"💔 {nickname} 减少 {loss}cm"]
                                                                                                     text = random.choice(self.niuniu_texts['compare']['lose']).format(
                                                                                                     nickname = nickname, target_nickname = target_data['nickname'], loss = loss
                                                                                                     )
@@ -794,10 +733,7 @@ class NiuniuPlugin(Star):
                                                                                                             # 重新获取最新数据
                                                                                                             user_data = self.get_user_data(group_id, user_id)
                                                                                                             target_data = self.get_user_data(group_id, target_id)
-                                                                                                            result_msg = [
-                                                                                                            "⚔️ 【牛牛对决结果】 ⚔️", f"🗡️ {
-                                                                                                            nickname
-                                                                                                            }: {
+                                                                                                            result_msg = ["⚔️ 【牛牛对决结果】 ⚔️", f"🗡️ {nickname}: {
                                                                                                             self.format_length(old_u_len)} → {
                                                                                                             self.format_length(user_data['length'])}", f"🛡️ {
                                                                                                             target_data['nickname']}: {
