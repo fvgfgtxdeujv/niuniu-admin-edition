@@ -891,20 +891,14 @@ class NiuniuPlugin(Star):
             # 获取目标用户数据
             target_data = self.get_user_data(group_id, target_id)
             if not target_data:
-                yield event.plain_result(f"❌ 用户 {
-                target_id
-                } 未注册牛牛")
+                yield event.plain_result(f"❌ 用户 {target_id} 未注册牛牛")
                 return
                 # 添加金币
                 current_gold = target_data.get('gold', 0)
                 updated_data = {
                 'gold': current_gold + int(amount)}
                 self.update_user_data(group_id, target_id, updated_data)
-                yield event.plain_result(f"✅ 成功给用户 {
-                target_data['nickname']} 添加 {
-                amount
-                } 金币\n当前金币： {
-                current_gold + int(amount)}")
+                yield event.plain_result(f"✅ 成功给用户 {target_data['nickname']} 添加 {amount} 金币\n当前金币： {current_gold + int(amount)}")
     async def _admin_add_length(self, event, target_id, amount):
         """管理员添加长度"""
         group_id = str(event.message_obj.group_id)
@@ -916,20 +910,14 @@ class NiuniuPlugin(Star):
             # 获取目标用户数据
             target_data = self.get_user_data(group_id, target_id)
             if not target_data:
-                yield event.plain_result(f"❌ 用户 {
-                target_id
-                } 未注册牛牛")
+                yield event.plain_result(f"❌ 用户 {target_id} 未注册牛牛")
                 return
                 # 添加长度
                 current_length = target_data.get('length', 0)
                 updated_data = {
                 'length': current_length + int(amount)}
                 self.update_user_data(group_id, target_id, updated_data)
-                yield event.plain_result(f"✅ 成功给用户 {
-                target_data['nickname']} 添加 {
-                amount
-                }cm 长度\n当前长度： {
-                self.format_length(current_length + int(amount))}")
+                yield event.plain_result(f"✅ 成功给用户 {target_data['nickname']} 添加 {amount}cm 长度\n当前长度： {self.format_length(current_length + int(amount))}")
     async def _admin_add_hardness(self, event, target_id, amount):
         """管理员添加硬度"""
         group_id = str(event.message_obj.group_id)
@@ -941,20 +929,14 @@ class NiuniuPlugin(Star):
             # 获取目标用户数据
             target_data = self.get_user_data(group_id, target_id)
             if not target_data:
-                yield event.plain_result(f"❌ 用户 {
-                target_id
-                } 未注册牛牛")
+                yield event.plain_result(f"❌ 用户 {target_id} 未注册牛牛")
                 return
                 # 添加硬度
                 current_hardness = target_data.get('hardness', 0)
                 updated_data = {
                 'hardness': current_hardness + int(amount)}
                 self.update_user_data(group_id, target_id, updated_data)
-                yield event.plain_result(f"✅ 成功给用户 {
-                target_data['nickname']} 添加 {
-                amount
-                } 点硬度\n当前硬度： {
-                current_hardness + int(amount)}")
+                yield event.plain_result(f"✅ 成功给用户 {target_data['nickname']} 添加 {amount} 点硬度\n当前硬度： {current_hardness + int(amount)}")
     async def _admin_add_item(self, event, target_id, item_name, amount):
         """管理员添加道具"""
         group_id = str(event.message_obj.group_id)
@@ -966,21 +948,13 @@ class NiuniuPlugin(Star):
             # 获取目标用户数据
             target_data = self.get_user_data(group_id, target_id)
             if not target_data:
-                yield event.plain_result(f"❌ 用户 {
-                target_id
-                } 未注册牛牛")
+                yield event.plain_result(f"❌ 用户 {target_id} 未注册牛牛")
                 return
                 # 添加道具
                 current_items = self.shop.get_user_items(group_id, target_id)
                 current_amount = current_items.get(item_name, 0)
                 self.shop.add_item(group_id, target_id, item_name, int(amount))
-                yield event.plain_result(f"✅ 成功给用户 {
-                target_data['nickname']} 添加 {
-                amount
-                } 个 {
-                item_name
-                }\n当前数量： {
-                current_amount + int(amount)}")
+                yield event.plain_result(f"✅ 成功给用户 {target_data['nickname']} 添加 {amount} 个 {item_name}\n当前数量： {current_amount + int(amount)}")
     async def _admin_reset_user(self, event, target_id):
         """管理员重置用户数据"""
         group_id = str(event.message_obj.group_id)
@@ -992,9 +966,7 @@ class NiuniuPlugin(Star):
             # 获取目标用户数据
             target_data = self.get_user_data(group_id, target_id)
             if not target_data:
-                yield event.plain_result(f"❌ 用户 {
-                target_id
-                } 未注册牛牛")
+                yield event.plain_result(f"❌ 用户 {target_id} 未注册牛牛")
                 return
                 # 重置用户数据
                 reset_data = {
@@ -1003,8 +975,7 @@ class NiuniuPlugin(Star):
                 self.update_user_data(group_id, target_id, reset_data)
                 # 清空道具
                 self.shop.clear_user_items(group_id, target_id)
-                yield event.plain_result(f"✅ 成功重置用户 {
-                target_data['nickname']} 的数据")
+                yield event.plain_result(f"✅ 成功重置用户 {target_data['nickname']} 的数据")
     async def _admin_view_user(self, event, target_id):
         """管理员查看用户数据"""
         group_id = str(event.message_obj.group_id)
@@ -1016,9 +987,7 @@ class NiuniuPlugin(Star):
             # 获取目标用户数据
             target_data = self.get_user_data(group_id, target_id)
             if not target_data:
-                yield event.plain_result(f"❌ 用户 {
-                target_id
-                } 未注册牛牛")
+                yield event.plain_result(f"❌ 用户 {target_id} 未注册牛牛")
                 return
                 # 获取用户道具
                 user_items = self.shop.get_user_items(group_id, target_id)
