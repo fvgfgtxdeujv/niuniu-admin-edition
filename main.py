@@ -344,12 +344,17 @@ yield result
 return
 
 # 管理员命令处理（不需要插件启用）
+user_id = str(event.get_sender_id())
+if self.is_admin(user_id):
 if msg.startswith("添加金币"):
-# 解析命令：添加金币 @用户 数量
+# 解析命令：添加金币 @用户 数量 或 添加金币 QQ号 数量
 parts = msg.split()
 if len(parts) >= 3:
-target_id = self.parse_target(event) # 解析@的用户
-if target_id:
+# 尝试解析@的用户
+target_id = self.parse_target(event)
+if not target_id:
+# 如果没有@，尝试将第二个参数作为QQ号
+target_id = parts[1]
 amount = parts[2]
 async for result in self._admin_add_gold(event, target_id, amount):
 yield result
@@ -358,7 +363,8 @@ elif msg.startswith("添加长度"):
 parts = msg.split()
 if len(parts) >= 3:
 target_id = self.parse_target(event)
-if target_id:
+if not target_id:
+target_id = parts[1]
 amount = parts[2]
 async for result in self._admin_add_length(event, target_id, amount):
 yield result
@@ -367,7 +373,8 @@ elif msg.startswith("添加硬度"):
 parts = msg.split()
 if len(parts) >= 3:
 target_id = self.parse_target(event)
-if target_id:
+if not target_id:
+target_id = parts[1]
 amount = parts[2]
 async for result in self._admin_add_hardness(event, target_id, amount):
 yield result
@@ -376,7 +383,8 @@ elif msg.startswith("添加道具"):
 parts = msg.split()
 if len(parts) >= 4:
 target_id = self.parse_target(event)
-if target_id:
+if not target_id:
+target_id = parts[1]
 item_name = parts[2]
 amount = parts[3]
 async for result in self._admin_add_item(event, target_id, item_name, amount):
@@ -386,7 +394,8 @@ elif msg.startswith("重置用户"):
 parts = msg.split()
 if len(parts) >= 2:
 target_id = self.parse_target(event)
-if target_id:
+if not target_id:
+target_id = parts[1]
 async for result in self._admin_reset_user(event, target_id):
 yield result
 return
@@ -394,7 +403,8 @@ elif msg.startswith("查看用户"):
 parts = msg.split()
 if len(parts) >= 2:
 target_id = self.parse_target(event)
-if target_id:
+if not target_id:
+target_id = parts[1]
 async for result in self._admin_view_user(event, target_id):
 yield result
 return
@@ -1168,6 +1178,16 @@ if not self.is_admin(user_id):
 yield event.plain_result("❌ 只有管理员才能使用此功能")
 return
 
+# 验证数量是否为数字
+try:
+amount_int = int(amount)
+if amount_int <= 0:
+yield event.plain_result("❌ 数量必须大于0")
+return
+except ValueError:
+yield event.plain_result("❌ 数量必须是有效的数字")
+return
+
 # 获取目标用户数据
 target_data = self.get_user_data(group_id, target_id)
 if not target_data:
@@ -1179,14 +1199,16 @@ return
 # 添加金币
 current_gold = target_data.get('gold', 0)
 updated_data = {
-  'gold': current_gold + int(amount)}
+  'gold': current_gold + amount_int
+}
 self.update_user_data(group_id, target_id, updated_data)
 
 yield event.plain_result(f"✅ 成功给用户 {
   target_data['nickname']} 添加 {
-  amount
+  amount_int
 } 金币\n当前金币： {
-  current_gold + int(amount)}")
+  current_gold + amount_int
+}")
 
 async def _admin_add_length(self, event, target_id, amount):
 """管理员添加长度"""
@@ -1196,6 +1218,16 @@ user_id = str(event.get_sender_id())
 # 检查是否为管理员
 if not self.is_admin(user_id):
 yield event.plain_result("❌ 只有管理员才能使用此功能")
+return
+
+# 验证数量是否为数字
+try:
+amount_int = int(amount)
+if amount_int <= 0:
+yield event.plain_result("❌ 数量必须大于0")
+return
+except ValueError:
+yield event.plain_result("❌ 数量必须是有效的数字")
 return
 
 # 获取目标用户数据
@@ -1209,14 +1241,15 @@ return
 # 添加长度
 current_length = target_data.get('length', 0)
 updated_data = {
-  'length': current_length + int(amount)}
+  'length': current_length + amount_int
+}
 self.update_user_data(group_id, target_id, updated_data)
 
 yield event.plain_result(f"✅ 成功给用户 {
   target_data['nickname']} 添加 {
-  amount
+  amount_int
 }cm 长度\n当前长度： {
-  self.format_length(current_length + int(amount))}")
+  self.format_length(current_length + amount_int)}")
 
 async def _admin_add_hardness(self, event, target_id, amount):
 """管理员添加硬度"""
@@ -1228,6 +1261,16 @@ if not self.is_admin(user_id):
 yield event.plain_result("❌ 只有管理员才能使用此功能")
 return
 
+# 验证数量是否为数字
+try:
+amount_int = int(amount)
+if amount_int <= 0:
+yield event.plain_result("❌ 数量必须大于0")
+return
+except ValueError:
+yield event.plain_result("❌ 数量必须是有效的数字")
+return
+
 # 获取目标用户数据
 target_data = self.get_user_data(group_id, target_id)
 if not target_data:
@@ -1235,6 +1278,20 @@ yield event.plain_result(f"❌ 用户 {
   target_id
 } 未注册牛牛")
 return
+
+# 添加硬度
+current_hardness = target_data.get('hardness', 0)
+updated_data = {
+  'hardness': current_hardness + amount_int
+}
+self.update_user_data(group_id, target_id, updated_data)
+
+yield event.plain_result(f"✅ 成功给用户 {
+  target_data['nickname']} 添加 {
+  amount_int
+} 点硬度\n当前硬度： {
+  current_hardness + amount_int
+}")
 
 # 添加硬度
 current_hardness = target_data.get('hardness', 0)
@@ -1258,6 +1315,29 @@ if not self.is_admin(user_id):
 yield event.plain_result("❌ 只有管理员才能使用此功能")
 return
 
+# 验证数量是否为数字
+try:
+amount_int = int(amount)
+if amount_int <= 0:
+yield event.plain_result("❌ 数量必须大于0")
+return
+except ValueError:
+yield event.plain_result("❌ 数量必须是有效的数字")
+return
+
+# 检查道具是否存在
+shop_config = self.shop._load_shop_config()
+valid_items = [item['name'] for item in shop_config]
+
+if item_name not in valid_items:
+valid_items_str = "\n".join(valid_items)
+yield event.plain_result(f"❌ 道具 ' {
+  item_name
+}' 不存在！\n\n✅ 有效道具列表：\n {
+  valid_items_str
+}")
+return
+
 # 获取目标用户数据
 target_data = self.get_user_data(group_id, target_id)
 if not target_data:
@@ -1269,15 +1349,16 @@ return
 # 添加道具
 current_items = self.shop.get_user_items(group_id, target_id)
 current_amount = current_items.get(item_name, 0)
-self.shop.add_item(group_id, target_id, item_name, int(amount))
+self.shop.add_item(group_id, target_id, item_name, amount_int)
 
 yield event.plain_result(f"✅ 成功给用户 {
   target_data['nickname']} 添加 {
-  amount
+  amount_int
 } 个 {
   item_name
 }\n当前数量： {
-  current_amount + int(amount)}")
+  current_amount + amount_int
+}")
 
 async def _admin_reset_user(self, event, target_id):
 """管理员重置用户数据"""
