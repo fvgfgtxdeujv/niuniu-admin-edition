@@ -36,12 +36,12 @@ class NiuniuPlugin(Star):
         # region 数据文件操作
 
     def _create_niuniu_lengths_file(self):
-        """创建数据文件"""
-        try:
-            with open(NIUNIU_LENGTHS_FILE, 'w', encoding = 'utf-8') as f:
-                yaml.dump({}, f)
-                except Exception as e:
-                    self.context.logger.error(f"创建文件失败: {str(e)}")
+    """创建数据文件"""
+    try:
+        with open(NIUNIU_LENGTHS_FILE, 'w', encoding='utf-8') as f:
+            yaml.dump({}, f)
+    except Exception as e:
+        self.context.logger.error(f"创建文件失败: {e}")
 
     def _load_niuniu_lengths(self):
         """从文件加载牛牛数据"""
@@ -62,20 +62,23 @@ class NiuniuPlugin(Star):
                                 for user_id in list(group_data.keys()):
                                     user_data = group_data[user_id]
                                     if isinstance(user_data, dict):
-                                        user_data.setdefault('coins', 0)
-                                        user_data.setdefault('items', {})
-                                        return data
-                                        except Exception as e:
-                                            self.context.logger.error(f"加载数据失败: {str(e)}")
-                                            return {}
+    try:
+        user_data.setdefault('coins', 0)
+        user_data.setdefault('items', {})
+        return data          # 成功才返回
+    except Exception as e:
+        self.context.logger.error(f"加载数据失败: {e}")
+        return {}            # 失败返回空 dict
+
 
     def _save_niuniu_lengths(self, data):
-        """保存数据到文件"""
-        try:
-            with open(NIUNIU_LENGTHS_FILE, 'w', encoding = 'utf-8') as f:
-                yaml.dump(data, f, allow_unicode = True)
-                except Exception as e:
-                    self.context.logger.error(f"保存失败: {str(e)}")
+    """保存数据到文件"""
+    try:
+        with open(NIUNIU_LENGTHS_FILE, 'w', encoding='utf-8') as f:
+            yaml.dump(data, f, allow_unicode=True)
+    except Exception as e:
+        self.context.logger.error(f"保存失败: {e}")
+
 
     def _load_niuniu_texts(self):
         """加载游戏文本"""
@@ -118,13 +121,14 @@ class NiuniuPlugin(Star):
         }
         }
         try:
-            if os.path.exists(NIUNIU_TEXTS_FILE):
-                with open(NIUNIU_TEXTS_FILE, 'r', encoding = 'utf-8') as f:
-                    custom_texts = yaml.safe_load(f) or {}
-                    return self._deep_merge(default_texts, custom_texts)
-                    except Exception as e:
-                        self.context.logger.error(f"加载文本失败: {str(e)}")
-                        return default_texts
+    if os.path.exists(NIUNIU_TEXTS_FILE):
+        with open(NIUNIU_TEXTS_FILE, 'r', encoding='utf-8') as f:
+            custom_texts = yaml.safe_load(f) or {}
+        return self._deep_merge(default_texts, custom_texts)
+except Exception as e:
+    self.context.logger.error(f"加载文本失败: {e}")
+    return default_texts
+
 
     def _deep_merge(self, base, update):
         """深度合并字典"""
@@ -136,30 +140,33 @@ class NiuniuPlugin(Star):
                     return base
 
     def _load_last_actions(self):
-        """加载冷却数据"""
-        try:
-            with open(LAST_ACTION_FILE, 'r', encoding = 'utf-8') as f:
-                return yaml.safe_load(f) or {}
-                except:
-                    return {}
+    """加载冷却数据"""
+    try:
+        with open(LAST_ACTION_FILE, 'r', encoding='utf-8') as f:
+            return yaml.safe_load(f) or {}
+    except Exception:
+        return {}
+
 
     def _save_last_actions(self, data):
-        """保存冷却数据到文件"""
-        try:
-            with open(LAST_ACTION_FILE, 'w', encoding = 'utf-8') as f:
-                yaml.dump(data, f, allow_unicode = True)
-                except Exception as e:
-                    self.context.logger.error(f"保存冷却数据失败: {str(e)}")
+    """保存冷却数据到文件"""
+    try:
+        with open(LAST_ACTION_FILE, 'w', encoding='utf-8') as f:
+            yaml.dump(data, f, allow_unicode=True)
+    except Exception as e:
+        self.context.logger.error(f"保存冷却数据失败: {e}")
+
 
     def _load_admins(self):
-        """加载管理员列表"""
-        try:
-            with open(os.path.join('data', 'cmd_config.json'), 'r', encoding = 'utf-8-sig') as f:
-                config = json.load(f)
-                return config.get('admins_id', [])
-                except Exception as e:
-                    self.context.logger.error(f"加载管理员列表失败: {str(e)}")
-                    return []
+    """加载管理员列表"""
+    try:
+        with open(os.path.join('data', 'cmd_config.json'), 'r', encoding='utf-8-sig') as f:
+            config = json.load(f)
+        return config.get('admins_id', [])
+    except Exception as e:
+        self.context.logger.error(f"加载管理员列表失败: {e}")
+        return []
+
 
     def is_admin(self, user_id):
         """检查用户是否为管理员"""
