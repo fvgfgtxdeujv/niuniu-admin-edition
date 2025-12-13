@@ -991,11 +991,7 @@ class NiuniuPlugin(Star):
                 return
                 # 获取用户道具
                 user_items = self.shop.get_user_items(group_id, target_id)
-                items_str = "\n".join([f"  - {
-                item
-                }: {
-                count
-                }" for item, count in user_items.items() if count > 0])
+                items_str = "\n".join([f"  - {item}: {count}" for item, count in user_items.items() if count > 0])
                 if not items_str:
                     items_str = "  无道具"
                     user_info = f"""👑 用户详细信息：
