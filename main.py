@@ -41,8 +41,7 @@ class NiuniuPlugin(Star):
             with open(NIUNIU_LENGTHS_FILE, 'w', encoding = 'utf-8') as f:
                 yaml.dump({}, f)
                 except Exception as e:
-                    self.context.logger.error(f"创建文件失败: {
-                    str(e)}")
+                    self.context.logger.error(f"创建文件失败: {str(e)}")
 
     def _load_niuniu_lengths(self):
         """从文件加载牛牛数据"""
@@ -67,8 +66,7 @@ class NiuniuPlugin(Star):
                                         user_data.setdefault('items', {})
                                         return data
                                         except Exception as e:
-                                            self.context.logger.error(f"加载数据失败: {
-                                            str(e)}")
+                                            self.context.logger.error(f"加载数据失败: {str(e)}")
                                             return {}
 
     def _save_niuniu_lengths(self, data):
@@ -77,8 +75,7 @@ class NiuniuPlugin(Star):
             with open(NIUNIU_LENGTHS_FILE, 'w', encoding = 'utf-8') as f:
                 yaml.dump(data, f, allow_unicode = True)
                 except Exception as e:
-                    self.context.logger.error(f"保存失败: {
-                    str(e)}")
+                    self.context.logger.error(f"保存失败: {str(e)}")
 
     def _load_niuniu_texts(self):
         """加载游戏文本"""
@@ -126,8 +123,7 @@ class NiuniuPlugin(Star):
                     custom_texts = yaml.safe_load(f) or {}
                     return self._deep_merge(default_texts, custom_texts)
                     except Exception as e:
-                        self.context.logger.error(f"加载文本失败: {
-                        str(e)}")
+                        self.context.logger.error(f"加载文本失败: {str(e)}")
                         return default_texts
 
     def _deep_merge(self, base, update):
@@ -153,8 +149,7 @@ class NiuniuPlugin(Star):
             with open(LAST_ACTION_FILE, 'w', encoding = 'utf-8') as f:
                 yaml.dump(data, f, allow_unicode = True)
                 except Exception as e:
-                    self.context.logger.error(f"保存冷却数据失败: {
-                    str(e)}")
+                    self.context.logger.error(f"保存冷却数据失败: {str(e)}")
 
     def _load_admins(self):
         """加载管理员列表"""
@@ -163,8 +158,7 @@ class NiuniuPlugin(Star):
                 config = json.load(f)
                 return config.get('admins_id', [])
                 except Exception as e:
-                    self.context.logger.error(f"加载管理员列表失败: {
-                    str(e)}")
+                    self.context.logger.error(f"加载管理员列表失败: {str(e)}")
                     return []
 
     def is_admin(self, user_id):
