@@ -448,9 +448,7 @@ class NiuniuPlugin(Star):
                 if on_cooldown and has_zhiming_rhythm:
                     # 消耗道具并跳过冷却
                     self.shop.consume_item(group_id, user_id, "致命节奏")
-                    result_msg.append(f"⚡ 触发致命节奏！ {
-                    nickname
-                    } 无视冷却强行打胶！")
+                    result_msg.append(f"⚡ 触发致命节奏！ {nickname} 无视冷却强行打胶！")
                     elapsed = self.COOLDOWN_30_MIN + 1 # 强制进入增益逻辑
                     else :
                         # 原有冷却处理
@@ -835,9 +833,7 @@ class NiuniuPlugin(Star):
                                                                                                                         'length': original_user_len
                                                                                                                         }
                                                                                                                         self.update_user_data(group_id, user_id, updated_user)
-                                                                                                                        result_msg.append(f"🛡️ {
-                                                                                                                        nickname
-                                                                                                                        } 的妙脆角生效，防止了长度减半！")
+                                                                                                                        result_msg.append(f"🛡️ {nickname} 的妙脆角生效，防止了长度减半！")
                                                                                                                         self.shop.consume_item(group_id, user_id, "妙脆角")
                                                                                                                         # 检查目标方妙脆角
                                                                                                                         if self.shop.get_user_items(group_id, target_id).get("妙脆角", 0) > 0:
@@ -845,8 +841,7 @@ class NiuniuPlugin(Star):
                                                                                                                             'length': original_target_len
                                                                                                                             }
                                                                                                                             self.update_user_data(group_id, target_id, updated_target)
-                                                                                                                            result_msg.append(f"🛡️ {
-                                                                                                                            target_data['nickname']} 的妙脆角生效，防止了长度减半！")
+                                                                                                                            result_msg.append(f"🛡️ {target_data['nickname']} 的妙脆角生效，防止了长度减半！")
                                                                                                                             self.shop.consume_item(group_id, target_id, "妙脆角")
                                                                                                                             result_msg.append("双方牛牛因过于柔软发生缠绕！")
                                                                                                                             special_event_triggered = True
@@ -868,9 +863,7 @@ class NiuniuPlugin(Star):
                                                                                                                                     'length': original_user_len
                                                                                                                                     }
                                                                                                                                     self.update_user_data(group_id, user_id, updated_user)
-                                                                                                                                    result_msg.append(f"🛡️ {
-                                                                                                                                    nickname
-                                                                                                                                    } 的妙脆角生效，防止了长度减半！")
+                                                                                                                                    result_msg.append(f"🛡️ {nickname} 的妙脆角生效，防止了长度减半！")
                                                                                                                                     self.shop.consume_item(group_id, user_id, "妙脆角")
                                                                                                                                     # 检查目标方
                                                                                                                                     if self.shop.get_user_items(group_id, target_id).get("妙脆角", 0) > 0:
@@ -878,8 +871,7 @@ class NiuniuPlugin(Star):
                                                                                                                                         'length': original_target_len
                                                                                                                                         }
                                                                                                                                         self.update_user_data(group_id, target_id, updated_target)
-                                                                                                                                        result_msg.append(f"🛡️ {
-                                                                                                                                        target_data['nickname']} 的妙脆角生效，防止了长度减半！")
+                                                                                                                                        result_msg.append(f"🛡️ {target_data['nickname']} 的妙脆角生效，防止了长度减半！")
                                                                                                                                         self.shop.consume_item(group_id, target_id, "妙脆角")
                                                                                                                                         result_msg.append(self.niuniu_texts['compare']['double_loss'].format(nickname1 = nickname, nickname2 = target_data['nickname']))
                                                                                                                                         special_event_triggered = True
