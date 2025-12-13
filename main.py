@@ -890,7 +890,7 @@ if abs(u_len - t_len) <= 5 and user_data['hardness'] > target_data['hardness']:
 text += f"\n🎉 {nickname} 因硬度优势获胜！"
 if total_gain == 0:
 text += f"\n{self.niuniu_texts['compare']['user_no_increase'].format(nickname=nickname)}"
-else :
+else:
 gain = random.randint(0, 3)
 loss = random.randint(1, 2)
 updated_target = {
@@ -907,7 +907,7 @@ self.update_user_data(group_id, target_id, updated_target)
 elif self.shop.consume_item(group_id, user_id, "余震"):
 result_msg = [f"🛡️ 【余震生效】{nickname} 未减少长度！"]
 self.update_user_data(group_id, target_id, updated_target)
-else :
+else:
 updated_user = {
   'length': max(1, user_data['length'] - loss)
 }
@@ -1347,5 +1347,4 @@ yield event.plain_result(admin_menu)
 💰 金币：{target_data.get('gold', 0)}
 📦 道具：
 {items_str}"""
-        
         yield event.plain_result(user_info)
