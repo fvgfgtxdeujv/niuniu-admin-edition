@@ -722,15 +722,7 @@ class NiuniuPlugin(Star):
                                                                                                             # 重新获取最新数据
                                                                                                             user_data = self.get_user_data(group_id, user_id)
                                                                                                             target_data = self.get_user_data(group_id, target_id)
-                                                                                                            result_msg = ["⚔️ 【牛牛对决结果】 ⚔️", f"🗡️ {nickname}: {
-                                                                                                            self.format_length(old_u_len)} → {
-                                                                                                            self.format_length(user_data['length'])}", f"🛡️ {
-                                                                                                            target_data['nickname']}: {
-                                                                                                            self.format_length(old_t_len)} → {
-                                                                                                            self.format_length(target_data['length'])}", f"📢 {
-                                                                                                            text
-                                                                                                            }"
-                                                                                                            ]
+                                                                                                            result_msg = ["⚔️ 【牛牛对决结果】 ⚔️", f"🗡️ {nickname}: {self.format_length(old_u_len)} → {self.format_length(user_data['length'])}", f"🛡️ {target_data['nickname']}: {self.format_length(old_t_len)} → {self.format_length(target_data['length'])}", f"📢 {text}"]
                                                                                                             special_event_triggered = False
                                                                                                             if abs(u_len - t_len) <= 5 and random.random() < 0.075:
                                                                                                                 result_msg.append("💥 双方势均力敌！")
