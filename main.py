@@ -309,16 +309,7 @@ class NiuniuPlugin(Star):
     # endregion
 
     # region 事件处理
-    niuniu_commands = [
-        "牛牛菜单",
-        "牛牛开",
-        "牛牛关",
-        "注册牛牛",
-        "打胶",
-        "我的牛牛",
-        "比划比划",
-        "牛牛排行",
-        "管理员菜单"]
+    niuniu_commands = ["牛牛菜单","牛牛开","牛牛关","注册牛牛","打胶","我的牛牛","比划比划","牛牛排行","管理员菜单"]
 
     @event_message_type(EventMessageType.GROUP_MESSAGE)
     async def on_group_message(self, event: AstrMessageEvent):
@@ -430,16 +421,7 @@ class NiuniuPlugin(Star):
                 yield result
         else:
             # 处理其他命令
-            handler_map = {
-                "注册牛牛": self._register,
-                "打胶": self._dajiao,
-                "我的牛牛": self._show_status,
-                "比划比划": self._compare,
-                "牛牛排行": self._show_ranking,
-                "牛牛商城": self.shop.show_shop,
-                "牛牛购买": self.shop.handle_buy,
-                "牛牛背包": self.shop.show_items
-            }
+            handler_map = {"注册牛牛": self._register,"打胶": self._dajiao,"我的牛牛": self._show_status,"比划比划": self._compare,"牛牛排行": self._show_ranking,"牛牛商城": self.shop.show_shop,"牛牛购买": self.shop.handle_buy,"牛牛背包": self.shop.show_items}
 
             for cmd, handler in handler_map.items():
                 if msg.startswith(cmd):
@@ -454,10 +436,7 @@ class NiuniuPlugin(Star):
     async def on_private_message(self, event: AstrMessageEvent):
         """私聊消息处理器"""
         msg = event.message_str.strip()
-        niuniu_commands = [
-            "牛牛菜单", "牛牛开", "牛牛关", "注册牛牛", "打胶", "我的牛牛", "比划比划",
-            "牛牛排行", "牛牛商城", "牛牛购买", "牛牛背包", "开冲", "停止开冲", "飞飞机"
-        ]
+        niuniu_commands = ["牛牛菜单", "牛牛开", "牛牛关", "注册牛牛", "打胶", "我的牛牛", "比划比划","牛牛排行", "牛牛商城", "牛牛购买", "牛牛背包", "开冲", "停止开冲", "飞飞机"]
 
         if any(msg.startswith(cmd) for cmd in niuniu_commands):
             yield event.plain_result("不许一个人偷偷玩牛牛")
@@ -496,18 +475,7 @@ class NiuniuPlugin(Star):
             return
 
         cfg = self.config.get('niuniu_config', {})
-        user_data = {
-            'nickname': nickname,
-            'length': random.randint(
-                cfg.get(
-                    'min_length',
-                    3),
-                cfg.get(
-                    'max_length',
-                    10)),
-            'hardness': 1,
-            'coins': 0,
-            'items': {}}
+        user_data = {'nickname': nickname,'length': random.randint(cfg.get('min_length',3),cfg.get('max_length',10)),'hardness': 1,'coins': 0,'items': {}}
 
         self.update_user_data(group_id, user_id, user_data)
         text = self.niuniu_texts['register']['success'].format(
@@ -707,30 +675,12 @@ class NiuniuPlugin(Star):
                     self.update_user_data(group_id, user_id, updated_user)
                     self.update_user_data(group_id, target_id, updated_target)
 
-                    result_msg = [
-                        "⚔️ 【牛牛对决结果】 ⚔️",
-                        f"🎉 {nickname} 获得了夺心魔技能，夺取了 {
-                            target_data['nickname']} 的全部长度！",
-                        f"🗡️ {nickname}: {
-                            self.format_length(
-                                user_data['length'])} → {
-                            self.format_length(
-                                user_data['length'] +
-                                original_target_length)}",
-                        f"🛡️ {
-                            target_data['nickname']}: {
-                                self.format_length(original_target_length)} → 1cm"]
+                    result_msg = ["⚔️ 【牛牛对决结果】 ⚔️",f"🎉 {nickname} 获得了夺心魔技能，夺取了 {target_data['nickname']} 的全部长度！",f"🗡️ {nickname}: {self.format_length(user_data['length'])} → {self.format_length(user_data['length'] +original_target_length)}",f"🛡️ {target_data['nickname']}: {self.format_length(original_target_length)} → 1cm"]
                     self.shop.consume_item(group_id, user_id, "夺心魔蝌蚪罐头")
                     yield event.plain_result("\n".join(result_msg))
                     return
                 else:
-                    result_msg = [
-                        "⚔️ 【牛牛对决结果】 ⚔️", f"⚠️ {nickname} 使用夺心魔蝌蚪罐头，但是罐头好像坏掉了...", f"🗡️ {nickname}: {
-                            self.format_length(
-                                user_data['length'])}", f"🛡️ {
-                            target_data['nickname']}: {
-                            self.format_length(
-                                target_data['length'])}"]
+                    result_msg = ["⚔️ 【牛牛对决结果】 ⚔️", f"⚠️ {nickname} 使用夺心魔蝌蚪罐头，但是罐头好像坏掉了...", f"🗡️ {nickname}: {self.format_length(user_data['length'])}", f"🛡️ {target_data['nickname']}: {self.format_length(target_data['length'])}"]
                     self.shop.consume_item(group_id, user_id, "夺心魔蝌蚪罐头")
                     yield event.plain_result("\n".join(result_msg))
                     return
@@ -744,19 +694,7 @@ class NiuniuPlugin(Star):
                     self.update_user_data(group_id, user_id, updated_user)
                     self.update_user_data(group_id, target_id, updated_target)
 
-                    result_msg = [
-                        "⚔️ 【牛牛对决结果】 ⚔️",
-                        f"🎉 {nickname} 获得了夺心魔技能，夺取了 {
-                            target_data['nickname']} 的全部长度！",
-                        f"🗡️ {nickname}: {
-                            self.format_length(
-                                user_data['length'])} → {
-                            self.format_length(
-                                user_data['length'] +
-                                original_target_length)}",
-                        f"🛡️ {
-                            target_data['nickname']}: {
-                                self.format_length(original_target_length)} → 1cm"]
+                    result_msg = ["⚔️ 【牛牛对决结果】 ⚔️",f"🎉 {nickname} 获得了夺心魔技能，夺取了 {target_data['nickname']} 的全部长度！",f"🗡️ {nickname}: {self.format_length(user_data['length'])} → {self.format_length(user_data['length'] +original_target_length)}",f"🛡️ {target_data['nickname']}: {self.format_length(original_target_length)} → 1cm"]
                     self.shop.consume_item(group_id, user_id, "夺心魔蝌蚪罐头")
                     yield event.plain_result("\n".join(result_msg))
                     return
@@ -764,24 +702,12 @@ class NiuniuPlugin(Star):
                     updated_user = {'length': 1}
                     self.update_user_data(group_id, user_id, updated_user)
 
-                    result_msg = [
-                        "⚔️ 【牛牛对决结果】 ⚔️", f"💔 {nickname} 使用夺心魔蝌蚪罐头，牛牛变成了夺心魔！！！", f"🗡️ {nickname}: {
-                            self.format_length(
-                                user_data['length'])} → 1cm", f"🛡️ {
-                            target_data['nickname']}: {
-                            self.format_length(
-                                target_data['length'])}"]
+                    result_msg = ["⚔️ 【牛牛对决结果】 ⚔️", f"💔 {nickname} 使用夺心魔蝌蚪罐头，牛牛变成了夺心魔！！！", f"🗡️ {nickname}: {self.format_length(user_data['length'])} → 1cm", f"🛡️ {target_data['nickname']}: {self.format_length(target_data['length'])}"]
                     self.shop.consume_item(group_id, user_id, "夺心魔蝌蚪罐头")
                     yield event.plain_result("\n".join(result_msg))
                     return
                 else:
-                    result_msg = [
-                        "⚔️ 【牛牛对决结果】 ⚔️", f"⚠️ {nickname} 使用夺心魔蝌蚪罐头，但是罐头好像坏掉了...", f"🗡️ {nickname}: {
-                            self.format_length(
-                                user_data['length'])}", f"🛡️ {
-                            target_data['nickname']}: {
-                            self.format_length(
-                                target_data['length'])}"]
+                    result_msg = ["⚔️ 【牛牛对决结果】 ⚔️", f"⚠️ {nickname} 使用夺心魔蝌蚪罐头，但是罐头好像坏掉了...", f"🗡️ {nickname}: {self.format_length(user_data['length'])}", f"🛡️ {target_data['nickname']}: {self.format_length(target_data['length'])}"]
                     self.shop.consume_item(group_id, user_id, "夺心魔蝌蚪罐头")
                     yield event.plain_result("\n".join(result_msg))
                     return
@@ -904,18 +830,7 @@ class NiuniuPlugin(Star):
         user_data = self.get_user_data(group_id, user_id)
         target_data = self.get_user_data(group_id, target_id)
 
-        final_result_msg = [
-            "⚔️ 【牛牛对决结果】 ⚔️",
-            f"🗡️ {nickname}: {
-                self.format_length(old_u_len)} → {
-                self.format_length(
-                    user_data['length'])}",
-            f"🛡️ {
-                target_data['nickname']}: {
-                self.format_length(old_t_len)} → {
-                self.format_length(
-                    target_data['length'])}",
-            *result_msg]
+        final_result_msg = ["⚔️ 【牛牛对决结果】 ⚔️",f"🗡️ {nickname}: {self.format_length(old_u_len)} → {self.format_length(user_data['length'])}",f"🛡️ {target_data['nickname']}: {self.format_length(old_t_len)} → {self.format_length(target_data['length'])}",*result_msg]
 
         # 特殊事件
         special_event_triggered = False
@@ -1026,21 +941,13 @@ class NiuniuPlugin(Star):
             return
 
         # 排序并取前10
-        sorted_users = sorted(
-            valid_users,
-            key=lambda x: x[1]['length'],
-            reverse=True)[
-            :10]
+        sorted_users = sorted(valid_users,key=lambda x: x[1]['length'],reverse=True)[:10]
 
         # 构建排行榜
         ranking = [self.niuniu_texts['ranking']['header']]
         for idx, (uid, data) in enumerate(sorted_users, 1):
             ranking.append(
-                self.niuniu_texts['ranking']['item'].format(
-                    rank=idx,
-                    name=data['nickname'],
-                    length=self.format_length(data['length'])
-                )
+                self.niuniu_texts['ranking']['item'].format(rank=idx,name=data['nickname'],length=self.format_length(data['length']))
             )
 
         yield event.plain_result("\n".join(ranking))
@@ -1188,12 +1095,7 @@ class NiuniuPlugin(Star):
             return
 
         # 重置用户数据
-        reset_data = {
-            'length': 10,
-            'hardness': 10,
-            'coins': 0,
-            'nickname': target_data['nickname']
-        }
+        reset_data = {'length': 10,'hardness': 10,'coins': 0,'nickname': target_data['nickname']}
         self.update_user_data(group_id, target_id, reset_data)
 
         # 清空道具
@@ -1224,12 +1126,6 @@ class NiuniuPlugin(Star):
         if not items_str:
             items_str = "  无道具"
 
-        user_info = f"""👑 用户详细信息：
-👤 昵称：{target_data['nickname']}
-📏 长度：{self.format_length(target_data['length'])}
-💪 硬度：{target_data.get('hardness', 1)}
-💰 金币：{target_data.get('coins', 0)}
-📦 道具：
-{items_str}"""
+        user_info = f"""👑 用户详细信息：👤 昵称：{target_data['nickname']} 📏 长度：{self.format_length(target_data['length'])} 💪 硬度：{target_data.get('hardness', 1)} 💰 金币：{target_data.get('coins', 0)} 📦 道具：{items_str}"""
 
         yield event.plain_result(user_info)
