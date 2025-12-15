@@ -786,9 +786,7 @@ class NiuniuPlugin(Star):
                 text += f"\n🎉 {nickname} 因硬度优势获胜！"
 
             if total_gain == 0:
-                text += f"\n{
-                    self.niuniu_texts['compare']['user_no_increase'].format(
-                        nickname=nickname)}"
+                text += f"\n{self.niuniu_texts['compare']['user_no_increase'].format(nickname=nickname)}"
 
             result_msg.append(text)
         else:
