@@ -18,6 +18,7 @@ os.makedirs(PLUGIN_DIR, exist_ok=True)
 NIUNIU_LENGTHS_FILE = os.path.join('data', 'niuniu_lengths.yml')
 NIUNIU_TEXTS_FILE = os.path.join(PLUGIN_DIR, 'niuniu_game_texts.yml')
 LAST_ACTION_FILE = os.path.join(PLUGIN_DIR, 'last_actions.yml')
+ADMIN_LIST_FILE = os.path.join(PLUGIN_DIR, 'admin_list.yml')
 
 
 @register("niuniu_plugin", "长安某", "牛牛插件，包含注册牛牛、打胶、我的牛牛、比划比划、牛牛排行等功能", "4.7.2")
@@ -36,8 +37,22 @@ class NiuniuPlugin(Star):
         self.admins = self._load_admins()  # 加载管理员列表
         self.shop = NiuniuShop(self)  # 实例化商城模块
         self.games = NiuniuGames(self)  # 实例化游戏模块
+        
+    def _load_admin_list(self):
+        """加载群级管理员"""
+        try:
+            with open(ADMIN_LIST_FILE, 'r', encoding='utf-8') as f:
+                return yaml.safe_load(f) or {}
+        except Exception:
+            return {}
 
-    # region 数据文件操作
+    def _save_admin_list(self, data):
+        """保存群级管理员"""
+        try:
+            with open(ADMIN_LIST_FILE, 'w', encoding='utf-8') as f:
+                yaml.dump(data, f, allow_unicode=True)
+        except Exception as e:
+            self.context.logger.error(f"保存管理员列表失败: {e}")
 
     def _create_niuniu_lengths_file(self):
         """创建数据文件"""
@@ -283,44 +298,36 @@ class NiuniuPlugin(Star):
         return None
 
     def parse_target(self, event):
-        """解析@目标或用户名/QQ号"""
+        """只提取@或命令后第一个连续数字串（QQ号）"""
         # 1. 先尝试解析@
         at_target = self.parse_at_target(event)
         if at_target:
             return at_target
 
-        # 2. 再尝试解析“命令+QQ号/昵称”
+        # 2. 去掉命令头，用正则拿第一串数字
         msg = event.message_str.strip()
-        # 先把命令头去掉，留下参数部分
         for cmd in ["添加金币", "添加长度", "添加硬度", "添加道具","重置用户", "查看用户", "比划比划"]:
             if msg.startswith(cmd):
                 arg = msg[len(cmd):].strip()
-                break
-        else:
-            return None
-
-        # 2.1 如果剩下的就是纯数字，直接当 QQ 号
-        if arg.isdigit():
-            return arg
-
-        # 2.2 否则按昵称模糊匹配
-        group_id = str(event.message_obj.group_id)
-        group_data = self.get_group_data(group_id)
-        for user_id, user_data in group_data.items():
-            if isinstance(user_data, dict):
-                nickname = user_data.get('nickname', '')
-                if re.search(re.escape(arg), nickname, re.IGNORECASE):
-                    return user_id
+                m = re.search(r'\d+', arg)
+                return m.group(0) if m else None
         return None
 
+    def is_admin(self, user_id, group_id=None):
+        """根管理员 或 本群管理员 都算"""
+        user_id = str(user_id)
+        # 根管理员（config.json 里的 admins_id）
+        if user_id in self.admins:
+            return True
+        if group_id:
+            group_id = str(group_id)
+            admin_data = self._load_admin_list()
+            return user_id in admin_data.get(group_id, [])
+        return False
 
-    def is_admin(self, user_id):
-        """检查用户是否为管理员"""
-        return str(user_id) in self.admins
-    # endregion
 
     # region 事件处理
-    niuniu_commands = ["牛牛菜单","牛牛开","牛牛关","注册牛牛","打胶","我的牛牛","比划比划","牛牛排行","管理员菜单"]
+    niuniu_commands = ["牛牛菜单","牛牛开","牛牛关","注册牛牛","打胶","我的牛牛","比划比划","牛牛排行","管理员菜单", "添加管理员","删除管理员","管理员列表"]
 
     @event_message_type(EventMessageType.GROUP_MESSAGE)
     async def on_group_message(self, event: AstrMessageEvent):
@@ -345,6 +352,26 @@ class NiuniuPlugin(Star):
         elif msg.startswith("管理员菜单"):
             async for result in self._show_admin_menu(event):
                 yield result
+            return
+        elif msg.startswith("添加管理员"):
+            target = self.parse_target(event)
+            if target:
+                async for r in self._add_admin(event, target):
+                yield r
+            else:
+                yield event.plain_result("❌ 请 @ 要添加的管理员 或 直接给 QQ 号")
+                return
+        elif msg.startswith("删除管理员"):
+            target = self.parse_target(event)
+            if target:
+                async for r in self._del_admin(event, target):
+                yield r
+            else:
+                yield event.plain_result("❌ 请 @ 要删除的管理员 或 直接给 QQ 号")
+            return
+        elif msg.startswith("管理员列表"):
+            async for r in self._list_admin(event):
+                yield r
             return
 
         # 管理员命令处理（不需要插件启用）
@@ -981,19 +1008,68 @@ class NiuniuPlugin(Star):
             return
 
         admin_menu = """👑 管理员功能菜单：
-🔹 添加金币 @用户 数量 - 给指定用户添加金币
-🔹 添加长度 @用户 数量 - 给指定用户添加长度
-🔹 添加硬度 @用户 数量 - 给指定用户添加硬度
-🔹 添加道具 @用户 道具名 数量 - 给指定用户添加道具
-🔹 重置用户 @用户 - 重置指定用户数据
-🔹 查看用户 @用户 - 查看指定用户详细数据
+🔹 添加金币 @用户/QQ 数量
+🔹 添加长度 @用户/QQ 数量
+🔹 添加硬度 @用户/QQ 数量
+🔹 添加道具 @用户/QQ 道具名 数量
+🔹 重置用户 @用户/QQ
+🔹 查看用户 @用户/QQ
+🔹 添加管理员 @用户/QQ   ← 根管理员可用
+🔹 删除管理员 @用户/QQ   ← 根管理员可用
+🔹 管理员列表            ← 任何人可查看
 使用示例：
-管理员菜单
-添加金币 @张三 100
-添加长度 @李四 50
-添加道具 @王五 夺心魔蝌蚪罐头 1"""
+添加金币 2997036064 10
+添加管理员 2149969203"""
 
         yield event.plain_result(admin_menu)
+    
+    async def _add_admin(self, event, target_id):
+        """根管理员才能加群管"""
+        user_id = str(event.get_sender_id())
+        group_id = str(event.message_obj.group_id)
+        if not self.is_admin(user_id):
+            yield event.plain_result("❌ 只有根管理员才能添加群管理员")
+            return
+        data = self._load_admin_list()
+        grp = data.setdefault(group_id, [])
+        if target_id in grp:
+            yield event.plain_result("⚠️ 该用户已是本群管理员")
+            return
+        grp.append(target_id)
+        self._save_admin_list(data)
+        yield event.plain_result(f"✅ 已添加 {target_id} 为本群牛牛管理员")
+
+    async def _del_admin(self, event, target_id):
+        """根管理员才能删群管"""
+        user_id = str(event.get_sender_id())
+        group_id = str(event.message_obj.group_id)
+        if not self.is_admin(user_id):
+            yield event.plain_result("❌ 只有根管理员才能删除群管理员")
+            return
+        data = self._load_admin_list()
+        grp = data.get(group_id, [])
+        if target_id not in grp:
+            yield event.plain_result("⚠️ 该用户不是本群管理员")
+            return
+        grp.remove(target_id)
+        self._save_admin_list(data)
+        yield event.plain_result(f"✅ 已删除 {target_id} 的本群牛牛管理员权限")
+
+    async def _list_admin(self, event):
+        """列出本群所有管理员"""
+        group_id = str(event.message_obj.group_id)
+        root_admins = [q for q in self.admins]          # 全局
+        local_admins  = self._load_admin_list().get(group_id, [])
+        msg = ["👑 牛牛管理员列表："]
+        if root_admins:
+            msg.append("【根管理员】")
+            msg.extend(f"  - {q}" for q in root_admins)
+        if local_admins:
+            msg.append("【本群管理员】")
+            msg.extend(f"  - {q}" for q in local_admins)
+        if not root_admins and not local_admins:
+            msg.append("  暂无管理员")
+        yield event.plain_result("\n".join(msg))
 
     async def _admin_add_gold(self, event, target_id, amount):
         """管理员添加金币"""
