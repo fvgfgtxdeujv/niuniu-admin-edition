@@ -283,25 +283,36 @@ class NiuniuPlugin(Star):
         return None
 
     def parse_target(self, event):
-        """解析@目标或用户名"""
-        # 先尝试解析@
+        """解析@目标或用户名/QQ号"""
+        # 1. 先尝试解析@
         at_target = self.parse_at_target(event)
         if at_target:
             return at_target
 
-        # 如果不是@，尝试解析用户名
+        # 2. 再尝试解析“命令+QQ号/昵称”
         msg = event.message_str.strip()
-        if msg.startswith("比划比划"):
-            target_name = msg[len("比划比划"):].strip()
-            if target_name:
-                group_id = str(event.message_obj.group_id)
-                group_data = self.get_group_data(group_id)
-                for user_id, user_data in group_data.items():
-                    if isinstance(user_data, dict):
-                        nickname = user_data.get('nickname', '')
-                        if re.search(re.escape(target_name), nickname, re.IGNORECASE):
-                            return user_id
+        # 先把命令头去掉，留下参数部分
+        for cmd in ["添加金币", "添加长度", "添加硬度", "添加道具","重置用户", "查看用户", "比划比划"]:
+            if msg.startswith(cmd):
+                arg = msg[len(cmd):].strip()
+                break
+        else:
+            return None
+
+        # 2.1 如果剩下的就是纯数字，直接当 QQ 号
+        if arg.isdigit():
+            return arg
+
+        # 2.2 否则按昵称模糊匹配
+        group_id = str(event.message_obj.group_id)
+        group_data = self.get_group_data(group_id)
+        for user_id, user_data in group_data.items():
+            if isinstance(user_data, dict):
+                nickname = user_data.get('nickname', '')
+                if re.search(re.escape(arg), nickname, re.IGNORECASE):
+                    return user_id
         return None
+
 
     def is_admin(self, user_id):
         """检查用户是否为管理员"""
