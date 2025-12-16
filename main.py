@@ -9,6 +9,7 @@ import json
 import sys
 
 from astrbot.api.all import *
+from astrbot.core.pipeline.context import Context
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -330,7 +331,7 @@ class NiuniuPlugin(Star):
     niuniu_commands = ["牛牛菜单","牛牛开","牛牛关","注册牛牛","打胶","我的牛牛","比划比划","牛牛排行","管理员菜单", "添加管理员","删除管理员","管理员列表"]
 
     @event_message_type(EventMessageType.GROUP_MESSAGE)
-    async def on_group_message(self, event: AstrMessageEvent):
+    async def on_group_message(self, event: AstrMessageEvent, context: Context):
         """群聊消息处理器"""
         group_id = str(event.message_obj.group_id)
         group_data = self.get_group_data(group_id)
