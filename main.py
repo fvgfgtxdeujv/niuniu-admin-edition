@@ -359,7 +359,7 @@ class NiuniuPlugin(Star):
             target = self.parse_target(event)
             if target:
                 async for r in self._add_admin(event, target):
-                yield r
+                    yield r
             else:
                 yield event.plain_result("❌ 请 @ 要添加的管理员 或 直接给 QQ 号")
                 return
