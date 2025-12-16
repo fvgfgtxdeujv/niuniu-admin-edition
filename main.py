@@ -9,6 +9,7 @@ import json
 import sys
 
 from astrbot.api.all import *
+from astrbot.core.event import AstrMessageEvent
 from astrbot.core.pipeline.context import Context
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
